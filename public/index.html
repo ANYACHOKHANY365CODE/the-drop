@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a1a1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Drop">
+<title>The Drop</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=UnifrakturMaguntia&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf9f5;--bg2:#f2f0ea;--bg3:#eceae0;
+  --text:#1a1a1a;--text2:#5a5750;--text3:#8a8680;
+  --border:#c8c4b8;--border2:#e2dfd6;--r:2px;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#111110;--bg2:#1a1916;--bg3:#222118;
+  --text:#e8e5dc;--text2:#8a8680;--text3:#5a5750;
+  --border:#3a3830;--border2:#272520;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'IM Fell English',serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:.5rem .9rem 5rem}
+.top-bar{display:flex;justify-content:space-between;align-items:center;border-top:2.5px solid var(--text);border-bottom:.5px solid var(--text);padding:3px 0;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);font-family:var(--sans)}
+.masthead{text-align:center;padding:.55rem 0 .3rem}
+.mast-title{font-family:'UnifrakturMaguntia',cursive;font-size:3.8rem;line-height:1;color:var(--text);user-select:none}
+.mast-tag{font-family:'IM Fell English',serif;font-style:italic;font-size:13px;color:var(--text2);margin-top:2px}
+.d-rule{border:none;border-top:2.5px double var(--text);margin:4px 0}
+.t-rule{border:none;border-top:.5px solid var(--border2);margin:3px 0}
+.meta-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text2);padding:5px 0;border-bottom:2px solid var(--text);margin-bottom:.8rem;font-family:var(--sans);flex-wrap:wrap;gap:4px}
+.meta-l{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#c0392b;display:inline-block;animation:blink 1.2s infinite;vertical-align:middle;margin-right:3px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+.rbtn{font-size:10px;padding:3px 10px;border:.5px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--sans);letter-spacing:1px;text-transform:uppercase;border-radius:var(--r);display:inline-flex;align-items:center;gap:4px;transition:all .15s}
+.rbtn:hover:not(:disabled){background:var(--bg2);color:var(--text)}
+.rbtn:disabled{opacity:.4;cursor:wait}
+.spin{animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;margin-bottom:.85rem;border-bottom:.5px solid var(--border2);-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{font-size:10px;padding:5px 10px;border:none;border-bottom:2px solid transparent;background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.8px;text-transform:uppercase;font-family:var(--sans);white-space:nowrap;flex-shrink:0;margin-bottom:-.5px;transition:color .15s}
+.tab:hover{color:var(--text)}
+.tab.on{color:var(--text);border-bottom-color:var(--text);font-weight:600}
+.badge{display:inline-block;background:var(--bg3);color:var(--text3);font-size:9px;padding:1px 5px;border-radius:8px;margin-left:3px;font-family:var(--sans)}
+.tab.on .badge{background:var(--text);color:var(--bg)}
+.stats{display:flex;gap:1.2rem;flex-wrap:wrap;padding:.5rem 0 .6rem;margin-bottom:.75rem;border-bottom:.5px solid var(--border2);font-family:var(--sans);font-size:11px;color:var(--text2)}
+.stats strong{color:var(--text);font-weight:600}
+.slbl{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text2);font-family:var(--sans);margin-bottom:5px;padding-top:6px;border-top:.5px solid var(--border2);display:flex;justify-content:space-between;align-items:center}
+.hero{display:grid;grid-template-columns:3fr 2fr;border:.5px solid var(--border2);border-radius:var(--r);margin-bottom:.85rem;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.hero:hover{border-color:var(--border)}
+.hero-l{padding:.9rem 1rem}
+.hero-r{padding:.9rem 1rem;background:var(--bg2);border-left:.5px solid var(--border2);display:flex;flex-direction:column;justify-content:space-between}
+.kicker{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);font-family:var(--sans);margin-bottom:5px}
+.hero-hl{font-family:'Playfair Display',serif;font-size:1.25rem;line-height:1.25;font-weight:700;color:var(--text);margin-bottom:6px}
+.hero-sum{font-family:'IM Fell English',serif;font-size:12.5px;line-height:1.65;color:var(--text2);font-style:italic;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.hero-foot{display:flex;align-items:center;justify-content:space-between;font-size:10px;font-family:var(--sans);color:var(--text2)}
+.rdmore{letter-spacing:1px;text-transform:uppercase;border-bottom:.5px solid transparent;transition:all .15s}
+.hero:hover .rdmore{color:var(--text);border-bottom-color:var(--text)}
+.hero-emoji{font-size:2.5rem;display:block;margin-bottom:.4rem}
+.hero-r-preview{font-size:11px;color:var(--text2);font-family:var(--sans);line-height:1.55;display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
+.full-badge{display:inline-block;font-size:9px;background:#e8f4e8;color:#2a6e2a;padding:2px 7px;border-radius:8px;font-family:var(--sans);margin-bottom:4px;border:.5px solid #b3d9b3}
+.snippet-badge{display:inline-block;font-size:9px;background:var(--bg3);color:var(--text3);padding:2px 7px;border-radius:8px;font-family:var(--sans);margin-bottom:4px;border:.5px solid var(--border2)}
+.slist{margin-bottom:1rem}
+.si{display:flex;align-items:flex-start;gap:.7rem;padding:.55rem .4rem;border-bottom:.5px solid var(--border2);cursor:pointer;border-radius:var(--r);transition:background .1s}
+.si:hover{background:var(--bg2)}
+.si:last-child{border-bottom:none}
+.si-num{font-size:10px;color:var(--text3);font-family:var(--sans);min-width:20px;padding-top:2px;text-align:right;flex-shrink:0}
+.si-body{flex:1;min-width:0}
+.si-title{font-family:'Playfair Display',serif;font-size:.88rem;line-height:1.35;font-weight:500;color:var(--text);margin-bottom:3px}
+.si-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.si-src{font-size:10px;color:var(--text2);font-family:var(--sans)}
+.si-time{font-size:10px;color:var(--text3);font-family:var(--sans)}
+.si-sum{font-size:11px;color:var(--text2);font-family:var(--sans);line-height:1.5;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.si-arr{color:var(--border2);font-size:16px;padding-top:1px;flex-shrink:0;transition:color .15s}
+.si:hover .si-arr{color:var(--text2)}
+.cat-hdr{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:5px;margin-bottom:.6rem;border-bottom:2px solid var(--text)}
+.cat-hdr-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text)}
+.cat-hdr-count{font-size:11px;color:var(--text2);font-family:var(--sans)}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.75rem}
+.pcard{border:.5px solid var(--border2);border-radius:var(--r);padding:.75rem .85rem;cursor:pointer;background:var(--bg);transition:border-color .15s}
+.pcard:hover{border-color:var(--border);background:var(--bg2)}
+.ptag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-family:var(--sans);color:var(--text3);margin-bottom:3px}
+.phl{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:3px}
+.psum{font-size:11px;color:var(--text2);font-family:var(--sans);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* Modal */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto}
+.mbox{background:var(--bg);border:.5px solid var(--border);max-width:700px;width:100%;padding:1.5rem;position:relative;border-radius:var(--r);margin:auto}
+.mcls{position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;color:var(--text2);font-size:1rem;padding:4px 7px;border-radius:var(--r)}
+.mcls:hover{background:var(--bg2)}
+.m-kicker{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-family:var(--sans);color:var(--text2);margin-bottom:5px}
+.m-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;line-height:1.3;color:var(--text);margin-bottom:.6rem}
+.m-meta{font-size:11px;color:var(--text2);font-family:var(--sans);margin-bottom:1rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.m-link{color:var(--text2);font-family:var(--sans);font-size:11px;text-decoration:none;border-bottom:.5px solid var(--border2);transition:color .15s}
+.m-link:hover{color:var(--text)}
+.m-body{font-size:14px;line-height:1.8;color:var(--text);font-family:var(--sans);padding:1rem;background:var(--bg2);border-radius:var(--r);border:.5px solid var(--border2);max-height:60vh;overflow-y:auto}
+.m-body p{margin-bottom:.75rem}
+.m-body p:last-child{margin-bottom:0}
+.m-paywall{font-size:13px;line-height:1.7;color:var(--text);font-family:var(--sans);padding:.85rem;background:var(--bg2);border-radius:var(--r);border:.5px solid var(--border2)}
+.m-paywall-note{font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:.75rem;padding:.65rem;background:var(--bg3);border-radius:var(--r);display:flex;align-items:center;gap:6px}
+/* Skeleton */
+.sk{background:var(--bg2);border-radius:var(--r);animation:shimmer 1.5s infinite}
+.sk-line{height:13px;margin-bottom:9px}
+.sk-hero{height:160px;margin-bottom:1rem}
+@keyframes shimmer{0%{opacity:.5}50%{opacity:1}100%{opacity:.5}}
+/* Toast */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);font-family:var(--sans);font-size:12px;padding:8px 18px;border-radius:20px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.orn{text-align:center;color:var(--border2);margin:10px 0;letter-spacing:8px;font-size:13px}
+.ticker{overflow:hidden;border-bottom:.5px solid var(--border2);margin-bottom:.75rem;background:var(--bg2);border-top:.5px solid var(--border2)}
+.ticker-inner{display:flex;white-space:nowrap;animation:tickmove 50s linear infinite;width:max-content}
+.ticker-inner:hover{animation-play-state:paused}
+.ticker-item{display:inline-flex;align-items:center;gap:5px;padding:5px 1.2rem;border-right:.5px solid var(--border2);font-family:var(--sans);font-size:11px;cursor:default}
+.tlbl{color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.tval{color:var(--text);font-weight:500}
+.tup{color:#2a7a2a}.tdn{color:#c0392b}
+@keyframes tickmove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.main-layout{display:grid;grid-template-columns:1fr 230px;gap:1.25rem;align-items:start}
+.main-col{min-width:0}
+.rates-sidebar{position:sticky;top:.5rem}
+.rc{border:.5px solid var(--border2);border-radius:var(--r);overflow:hidden;margin-bottom:.75rem;background:var(--bg)}
+.rc-hdr{background:var(--bg2);border-bottom:.5px solid var(--border2);padding:.45rem .75rem;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-family:var(--sans);color:var(--text2);display:flex;justify-content:space-between;align-items:center}
+.rc-hdr small{font-size:9px;color:var(--text3);letter-spacing:0;text-transform:none}
+.rr{display:flex;justify-content:space-between;align-items:center;padding:.4rem .75rem;border-bottom:.5px solid var(--border2);font-family:var(--sans)}
+.rr:last-child{border-bottom:none}
+.rl{font-size:11px;color:var(--text2)}
+.rv{font-size:11px;font-weight:500;color:var(--text);text-align:right;display:flex;align-items:center;gap:3px}
+.ru{color:#2a7a2a;font-size:10px}.rd{color:#c0392b;font-size:10px}
+.rn{font-size:10px;color:var(--text3);font-family:var(--sans);padding:.35rem .75rem;font-style:italic;border-top:.5px solid var(--border2)}
+.rl-sk{height:10px;margin:5px 0}
+@media(max-width:760px){
+  .main-layout{grid-template-columns:1fr}
+  .rates-sidebar{position:static}
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top-bar">
+  <span>Est. 2026 &mdash; Daily Dossier</span>
+  <span><span class="live-dot"></span>Live Vibe Monitor</span>
+  <span>Price: Pure Attention</span>
+</div>
+<div class="masthead">
+  <div class="mast-title">The Drop</div>
+  <div class="mast-tag">be highkey informed.</div>
+</div>
+<div class="d-rule"></div><div class="t-rule"></div>
+<div class="meta-row">
+  <div class="meta-l">
+    <span id="volstr">Year I &mdash; Issue &hellip;</span>
+    <span style="color:var(--border)">|</span>
+    <span id="datestr"></span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <span id="cdlbl" style="font-size:10px"></span>
+    <button class="rbtn" id="refreshBtn" onclick="loadNews(true)">
+      <svg id="ricon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      <span>Refresh Now</span>
+    </button>
+  </div>
+</div>
+<div class="tabs">
+  <button class="tab on"  onclick="sw('top',this)">Top Stories</button>
+  <button class="tab" onclick="sw('world',this)">World &amp; War <span class="badge" id="b-world">–</span></button>
+  <button class="tab" onclick="sw('india',this)">India <span class="badge" id="b-india">–</span></button>
+  <button class="tab" onclick="sw('policy',this)">Policy Watch</button>
+  <button class="tab" onclick="sw('tech',this)">Tech &amp; AI <span class="badge" id="b-tech">–</span></button>
+  <button class="tab" onclick="sw('biz',this)">Business <span class="badge" id="b-biz">–</span></button>
+  <button class="tab" onclick="sw('climate',this)">Climate <span class="badge" id="b-climate">–</span></button>
+  <button class="tab" onclick="sw('health',this)">Health <span class="badge" id="b-health">–</span></button>
+  <button class="tab" onclick="sw('sports',this)">Sports <span class="badge" id="b-sports">–</span></button>
+  <button class="tab" onclick="sw('pop',this)">Culture <span class="badge" id="b-pop">–</span></button>
+</div>
+
+<div class="ticker" id="ticker"><div class="ticker-inner" id="ticker-inner"><div class="ticker-item"><span class="tlbl">Loading rates</span><span class="tval">...</span></div></div></div>
+
+<div class="main-layout">
+  <div class="main-col" id="content"></div>
+  <aside class="rates-sidebar" id="rates-sidebar">
+    <div class="rc"><div class="rc-hdr">Market Rates</div><div class="rates-loading" id="sidebar-loading">Loading...</div></div>
+  </aside>
+</div>
+</div>
+<div id="mod"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+
+const NOW=new Date();
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+document.getElementById('datestr').textContent=`${DAYS[NOW.getDay()]}, ${MONTHS[NOW.getMonth()]} ${NOW.getDate()}, ${NOW.getFullYear()}`;
+const yr=NOW.getFullYear()-2025;
+const roman=['I','II','III','IV','V','VI','VII','VIII','IX','X'][yr-1]||yr;
+const doy=Math.floor((NOW-new Date(NOW.getFullYear(),0,0))/864e5);
+document.getElementById('volstr').textContent=`Year ${roman} \u2014 Issue ${doy}`;
+
+function msTo7(){
+  const n=new Date(),utc=n.getTime()+n.getTimezoneOffset()*60000;
+  const ist=new Date(utc+5.5*3600000),t=new Date(ist);
+  t.setHours(7,0,0,0);
+  if(ist.getHours()>=7)t.setDate(t.getDate()+1);
+  return t-ist;
+}
+function tickCD(){
+  const ms=msTo7(),h=Math.floor(ms/36e5),m=Math.floor((ms%36e5)/6e4);
+  document.getElementById('cdlbl').textContent=`next drop in ${h}h ${m}m`;
+}
+tickCD(); setInterval(tickCD,60000);
+
+function toast(msg,dur=2500){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+let G=null, currentTab='top';
+const CATS=['world','india','tech','biz','climate','health','sports','pop'];
+const CAT_LABEL={world:'World & War',india:'India',tech:'Tech & AI',biz:'Business',climate:'Climate',health:'Health',sports:'Sports',pop:'Culture'};
+const CAT_EMOJI={world:'🌍',india:'🇮🇳',tech:'🤖',biz:'📈',climate:'🌿',health:'🩺',sports:'🏆',pop:'🎬'};
+const POLICY_KW=['policy','bill','act','scheme','budget','ministry','parliament','court','supreme','lok sabha','rajya sabha','cabinet','modi','cm ','chief minister','niti','rbi','sebi','regulation','ordinance','notification','amendment','welfare','subsidy','tax','gst'];
+
+function timeAgo(d){
+  if(!d) return '';
+  const diff=Math.floor((Date.now()-new Date(d))/60000);
+  if(isNaN(diff)||diff<0) return '';
+  if(diff<60) return `${diff}m ago`;
+  if(diff<1440) return `${Math.floor(diff/60)}h ago`;
+  return new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+}
+
+function safe(s){
+  return JSON.stringify(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');
+}
+
+// Format full article text into paragraphs
+function formatArticle(text){
+  if(!text) return '';
+  return text.split(/\.\s+/)
+    .filter(s=>s.trim().length>20)
+    .reduce((acc,s,i)=>{
+      if(i%4===0) acc.push([]);
+      acc[acc.length-1].push(s.trim()+'.');
+      return acc;
+    },[])
+    .map(group=>`<p>${group.join(' ')}</p>`)
+    .join('');
+}
+
+async function loadNews(force=false){
+  const btn=document.getElementById('refreshBtn');
+  const ico=document.getElementById('ricon');
+  btn.disabled=true; ico.classList.add('spin');
+  showSkeleton();
+  try{
+    const r=await fetch(force?'/api/news?refresh=true':'/api/news');
+    const j=await r.json();
+    if(!j.success) throw new Error(j.error||'Unknown error');
+    G=j.grouped;
+    updateBadges();
+    if(j.warning) toast(j.warning,4000);
+    else if(!j.fromCache) toast(`🔥 ${j.total} stories loaded`);
+    render();
+    if(force) loadRates(); // refresh rates too when user manually refreshes
+  }catch(e){
+    showError(e.message);
+    toast("couldn't load — try again");
+  }finally{
+    btn.disabled=false; ico.classList.remove('spin');
+  }
+}
+
+function updateBadges(){
+  if(!G) return;
+  CATS.forEach(c=>{
+    const el=document.getElementById(`b-${c}`);
+    if(el) el.textContent=(G[c]||[]).length||'0';
+  });
+}
+
+function showSkeleton(){
+  document.getElementById('content').innerHTML=`
+    <div style="padding:1rem 0">
+      <div class="sk sk-hero"></div>
+      ${Array(5).fill(0).map(()=>`
+        <div style="display:flex;gap:.7rem;padding:.55rem 0;border-bottom:.5px solid var(--border2)">
+          <div class="sk sk-line" style="width:20px;flex-shrink:0"></div>
+          <div style="flex:1">
+            <div class="sk sk-line" style="width:88%"></div>
+            <div class="sk sk-line" style="width:45%;height:10px"></div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function showError(msg){
+  document.getElementById('content').innerHTML=`
+    <div style="padding:3rem 1rem;text-align:center;font-family:var(--sans);color:var(--text2);font-size:14px">
+      <p style="margin-bottom:1rem">couldn't load the drop 😮‍💨<br><small style="opacity:.6">${msg}</small></p>
+      <button class="rbtn" style="margin:auto" onclick="loadNews(true)">try again</button>
+    </div>`;
+}
+
+function openStory(s){
+  const hasFullText = s.fullText && s.fullText.length > 200;
+  const bodyHTML = hasFullText
+    ? `<div class="${hasFullText?'full-badge':'snippet-badge'}">${hasFullText?'✓ Full article':'Preview only'}</div>
+       <div class="m-body">${formatArticle(s.fullText)}</div>`
+    : `<div class="snippet-badge">${s.paywall?'🔒 Paywalled source':'Preview snippet'}</div>
+       <div class="m-paywall">${s.rss_summary||'No summary available.'}</div>
+       ${s.paywall?`<div class="m-paywall-note"><i class="ti ti-lock" aria-hidden="true"></i> This source requires a subscription. The full article is available on their website.</div>`:''}`;
+
+  document.getElementById('mod').innerHTML=`
+  <div class="mbg" onclick="if(event.target.classList.contains('mbg'))closeMod()">
+    <div class="mbox">
+      <button class="mcls" onclick="closeMod()" aria-label="Close">&#x2715;</button>
+      <div class="m-kicker">${CAT_LABEL[s.cat]||s.cat} &bull; ${s.source}</div>
+      <div class="m-title">${s.title}</div>
+      <div class="m-meta">
+        <span>${timeAgo(s.pubDate)}</span>
+        ${s.link?`<a class="m-link" href="${s.link}" target="_blank" rel="noopener">read on ${s.source} ↗</a>`:''}
+      </div>
+      ${bodyHTML}
+    </div>
+  </div>`;
+}
+
+function closeMod(){ document.getElementById('mod').innerHTML=''; }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMod(); });
+
+function heroCard(s){
+  const preview=s.fullText?s.fullText.slice(0,200)+'…':(s.rss_summary||'');
+  return `<div class="hero" onclick='openStory(${safe(s)})'>
+    <div class="hero-l">
+      <div class="kicker">${CAT_LABEL[s.cat]||s.cat} &bull; ${s.source}</div>
+      <div class="hero-hl">${s.title}</div>
+      <div class="hero-sum">${s.rss_summary||''}</div>
+      <div class="hero-foot">
+        <span>${timeAgo(s.pubDate)}</span>
+        <span class="rdmore">${s.fullText?'read full story':'read more'} &rarr;</span>
+      </div>
+    </div>
+    <div class="hero-r">
+      <span class="hero-emoji">${CAT_EMOJI[s.cat]||'📰'}</span>
+      <div class="hero-r-preview">${preview}</div>
+    </div>
+  </div>`;
+}
+
+function storyItem(s,num){
+  return `<div class="si" onclick='openStory(${safe(s)})'>
+    <div class="si-num">${num}</div>
+    <div class="si-body">
+      <div class="si-title">${s.title}</div>
+      <div class="si-meta">
+        <span class="si-src">${s.source}</span>
+        <span class="si-time">${timeAgo(s.pubDate)}</span>
+        ${s.fullText?`<span style="font-size:9px;background:#e8f4e8;color:#2a6e2a;padding:1px 5px;border-radius:6px;font-family:var(--sans)">full</span>`:''}
+        ${s.paywall?`<span style="font-size:9px;background:var(--bg3);color:var(--text3);padding:1px 5px;border-radius:6px;font-family:var(--sans)">paywalled</span>`:''}
+      </div>
+      <div class="si-sum">${s.rss_summary||''}</div>
+    </div>
+    <div class="si-arr">›</div>
+  </div>`;
+}
+
+function render(){
+  if(!G){ showSkeleton(); return; }
+  let h='';
+
+  if(currentTab==='top'){
+    const total=CATS.reduce((s,c)=>s+(G[c]||[]).length,0);
+    const fullCount=CATS.reduce((s,c)=>s+(G[c]||[]).filter(x=>x.fullText).length,0);
+    h+=`<div class="stats">
+      <div><strong>${total}</strong> stories today</div>
+      <div><strong>${fullCount}</strong> full articles</div>
+      <div><strong>16+</strong> sources</div>
+      <div>updated <strong>7am IST</strong></div>
+    </div>`;
+    h+=`<div class="slbl"><span>Lead Story — Each Section</span></div>`;
+    CATS.forEach(cat=>{
+      const stories=G[cat]||[];
+      if(!stories.length) return;
+      h+=heroCard(stories[0]);
+    });
+  }
+
+  else if(CATS.includes(currentTab)){
+    const stories=G[currentTab]||[];
+    const fullCount=stories.filter(s=>s.fullText).length;
+    h+=`<div class="cat-hdr">
+      <div class="cat-hdr-title">${CAT_EMOJI[currentTab]} ${CAT_LABEL[currentTab]}</div>
+      <div class="cat-hdr-count">${stories.length} stories &bull; ${fullCount} full articles</div>
+    </div>`;
+    if(stories.length){
+      h+=heroCard(stories[0]);
+      if(stories.length>1){
+        h+=`<div class="slbl"><span>All Stories</span><span style="font-size:9px;opacity:.6">${stories.length-1} more</span></div>`;
+        h+=`<div class="slist">${stories.slice(1).map((s,i)=>storyItem(s,i+2)).join('')}</div>`;
+      }
+    }
+  }
+
+  else if(currentTab==='policy'){
+    const india=G.india||[];
+    const policy=india.filter(s=>POLICY_KW.some(kw=>(s.title+' '+(s.rss_summary||'')).toLowerCase().includes(kw)));
+    const other=india.filter(s=>!policy.includes(s));
+    h+=`<div class="cat-hdr"><div class="cat-hdr-title">Policy Watch</div><div class="cat-hdr-count">${policy.length} policy stories</div></div>`;
+    if(policy.length){
+      h+=`<div class="pgrid">`;
+      policy.forEach(s=>{
+        h+=`<div class="pcard" onclick='openStory(${safe(s)})'>
+          <div class="ptag">${s.source} ${s.fullText?'<span style="color:#2a6e2a">✓ full</span>':''}</div>
+          <div class="phl">${s.title}</div>
+          ${s.rss_summary?`<div class="psum">${s.rss_summary}</div>`:''}
+        </div>`;
+      });
+      h+=`</div>`;
+    }
+    if(other.length){
+      h+=`<div class="orn">&mdash; &diams; &mdash;</div>`;
+      h+=`<div class="slbl"><span>Other India Stories</span><span style="font-size:9px;opacity:.6">${other.length}</span></div>`;
+      h+=`<div class="slist">${other.map((s,i)=>storyItem(s,i+1)).join('')}</div>`;
+    }
+    if(!policy.length&&!other.length) h+=`<div style="padding:2rem;text-align:center;font-family:var(--sans);font-size:13px;color:var(--text2)">no policy stories today</div>`;
+  }
+
+  document.getElementById('content').innerHTML=h;
+}
+
+function sw(t,btn){
+  currentTab=t;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+}
+
+loadNews(false);
+
+// ── Rates ────────────────────────────────────────────────────
+function fmt(n, prefix=''){
+  if(n==null||n===undefined) return '–';
+  return prefix+n;
+}
+function chg(val, up){
+  if(val==null) return '';
+  return `<span class="${up?'ru':'rd'}">${up?'▲':'▼'}${Math.abs(val)}%</span>`;
+}
+
+function renderTicker(r){
+  const items = [];
+  if(r.indices?.sensex) items.push(`<div class="ticker-item"><span class="tlbl">SENSEX</span><span class="tval">${r.indices.sensex}</span>${chg(r.indices.sensex_change,r.indices.sensex_up)}</div>`);
+  if(r.indices?.nifty50) items.push(`<div class="ticker-item"><span class="tlbl">NIFTY 50</span><span class="tval">${r.indices.nifty50}</span>${chg(r.indices.nifty_change,r.indices.nifty_up)}</div>`);
+  if(r.metals?.gold_24k_g) items.push(`<div class="ticker-item"><span class="tlbl">GOLD 24K</span><span class="tval">₹${r.metals.gold_24k_g.toLocaleString('en-IN')}/g</span></div>`);
+  if(r.metals?.gold_22k_g) items.push(`<div class="ticker-item"><span class="tlbl">GOLD 22K</span><span class="tval">₹${r.metals.gold_22k_g.toLocaleString('en-IN')}/g</span></div>`);
+  if(r.crude?.crude_usd) items.push(`<div class="ticker-item"><span class="tlbl">CRUDE OIL</span><span class="tval">$${r.crude.crude_usd}/bbl</span>${chg(r.crude.crude_change,r.crude.crude_up)}</div>`);
+  if(r.forex?.usd_inr) items.push(`<div class="ticker-item"><span class="tlbl">USD/INR</span><span class="tval">₹${r.forex.usd_inr}</span></div>`);
+  items.push(`<div class="ticker-item"><span class="tlbl">REPO RATE</span><span class="tval">${r.repo_rate}</span></div>`);
+  if(!items.length) return;
+  const doubled = [...items,...items].join('');
+  document.getElementById('ticker-inner').innerHTML = doubled;
+}
+
+function renderSidebar(r){
+  let h = '';
+
+  if(r.indices?.sensex){
+    h += `<div class="rc">
+      <div class="rc-hdr">Equity Markets <small>live</small></div>
+      <div class="rr"><div class="rl">SENSEX</div><div class="rv">${r.indices.sensex} ${chg(r.indices.sensex_change,r.indices.sensex_up)}</div></div>
+      ${r.indices.nifty50?`<div class="rr"><div class="rl">NIFTY 50</div><div class="rv">${r.indices.nifty50} ${chg(r.indices.nifty_change,r.indices.nifty_up)}</div></div>`:''}
+      ${r.indices.nifty_bank?`<div class="rr"><div class="rl">NIFTY Bank</div><div class="rv">${r.indices.nifty_bank}</div></div>`:''}
+      <div class="rn">NSE/BSE • updated every 30min</div>
+    </div>`;
+  }
+
+  if(r.metals){
+    h += `<div class="rc">
+      <div class="rc-hdr">Gold <small>per gram</small></div>
+      ${r.metals.gold_24k_g?`<div class="rr"><div class="rl">Gold 24K</div><div class="rv">₹${r.metals.gold_24k_g.toLocaleString('en-IN')}</div></div>`:''}
+      ${r.metals.gold_22k_g?`<div class="rr"><div class="rl">Gold 22K</div><div class="rv">₹${r.metals.gold_22k_g.toLocaleString('en-IN')}</div></div>`:''}
+    </div>`;
+  }
+
+  if(r.crude?.crude_usd){
+    h += `<div class="rc">
+      <div class="rc-hdr">Crude Oil <small>WTI</small></div>
+      <div class="rr"><div class="rl">Per barrel</div><div class="rv">$${r.crude.crude_usd} ${chg(r.crude.crude_change,r.crude.crude_up)}</div></div>
+    </div>`;
+  }
+
+  if(r.forex?.usd_inr){
+    h += `<div class="rc">
+      <div class="rc-hdr">Exchange Rate</div>
+      <div class="rr"><div class="rl">USD / INR</div><div class="rv">₹${r.forex.usd_inr}</div></div>
+    </div>`;
+  }
+
+  h += `<div class="rc">
+    <div class="rc-hdr">RBI Policy Rates <small>${r.repo_date||''}</small></div>
+    <div class="rr"><div class="rl">Repo Rate</div><div class="rv">${r.repo_rate}</div></div>
+    <div class="rr"><div class="rl">Reverse Repo</div><div class="rv">${r.reverse_repo}</div></div>
+    <div class="rr"><div class="rl">Bank Rate / MSF</div><div class="rv">${r.bank_rate}</div></div>
+    <div class="rr"><div class="rl">CRR</div><div class="rv">${r.crr}</div></div>
+    <div class="rr"><div class="rl">SLR</div><div class="rv">${r.slr}</div></div>
+    <div class="rn">Updated at each RBI MPC meeting</div>
+  </div>`;
+
+  document.getElementById('rates-sidebar').innerHTML = h;
+}
+
+async function loadRates(){
+  try{
+    const r = await fetch('/api/rates');
+    const j = await r.json();
+    if(j.success){
+      renderTicker(j.rates);
+      renderSidebar(j.rates);
+    }
+  } catch(e){
+    document.getElementById('rates-sidebar').innerHTML = `<div class="rc"><div class="rc-hdr">Market Rates</div><div class="rates-loading" style="color:var(--text3)">couldn't load rates</div></div>`;
+  }
+}
+
+loadRates();
+</script>
+</body>
+</html>
