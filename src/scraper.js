@@ -21,35 +21,97 @@ const axiosClient = axios.create({
   }
 });
 
-// ── Scrape full article text from URL ─────────────────────────
+// ── Scrape full article text — universal approach ─────────────
+// Tries site-specific selector first, falls back to smart paragraph extraction
 async function scrapeArticle(url, selector) {
   try {
     const { data } = await axiosClient.get(url);
     const $ = cheerio.load(data);
 
-    // Remove noise elements
-    $('script, style, nav, header, footer, .ad, .advertisement, .social-share, .related-stories, .newsletter, .subscribe, .paywall, .comments, aside, .sidebar').remove();
+    // Remove all noise
+    $('script, style, nav, header, footer, .ad, .advertisement, .ads, .adsbygoogle, ' +
+      '.social-share, .social-media, .share-buttons, .related, .related-stories, ' +
+      '.newsletter, .subscribe, .subscription, .paywall, .comments, .comment-section, ' +
+      'aside, .sidebar, .widget, .promo, .banner, .popup, .modal, ' +
+      '.breadcrumb, .tags, .author-bio, .read-more, .more-stories, ' +
+      'figure, figcaption, .image-caption, .photo-caption, ' +
+      'noscript, iframe, [class*="ad-"], [id*="ad-"], [class*="promo"]').remove();
 
-    // Try each selector
-    const selectors = selector.split(',').map(s => s.trim());
-    for (const sel of selectors) {
-      const el = $(sel);
-      if (el.length) {
-        const text = el.text()
-          .replace(/\s+/g, ' ')
-          .replace(/\n+/g, ' ')
-          .trim();
-        if (text.length > 200) return text.slice(0, 3000); // Cap at 3000 chars
+    // Step 1 — try provided selector
+    if (selector) {
+      const selectors = selector.split(',').map(s => s.trim());
+      for (const sel of selectors) {
+        const el = $(sel).first();
+        if (el.length) {
+          const text = el.text().replace(/\s+/g, ' ').trim();
+          if (text.length > 300) return text.slice(0, 4000);
+        }
       }
     }
 
-    // Fallback: grab all paragraph text
-    const paras = [];
-    $('article p, main p, .content p').each((_, el) => {
-      const t = $(el).text().trim();
-      if (t.length > 40) paras.push(t);
+    // Step 2 — try common universal selectors used by most news sites
+    const universalSelectors = [
+      'article .content', 'article .body', '.article-body', '.article-content',
+      '.story-body', '.story-content', '.story-detail', '.story-details',
+      '.post-content', '.post-body', '.entry-content',
+      '[itemprop="articleBody"]', '[data-module="ArticleBody"]',
+      '.content-area', '.main-content', '.news-content',
+      '.detail-content', '.article__body', '.article__content',
+      '.text-content', '.body-content', '.page-content',
+      // NDTV specific
+      '.sp-cn', '.ins_storybody', '.article__content',
+      // The Hindu specific
+      '.articlebodycontent', '._s30J',
+      // India Today specific
+      '.jsx-story-content', '.storyDetails',
+      // Firstpost specific
+      '.article-full-content', '.story-box',
+      // MoneyControl specific
+      '.arti-flow', '.article_wrapper',
+      // Economic Times specific
+      '.artText', '.article_content',
+      // Business Standard specific
+      '#storycontent', '.storyPage',
+      // Business Today specific
+      '.storyContent', '.story-with-summary',
+      // Deccan Chronicle specific
+      '.story-details', '#content-details',
+      // Outlook specific
+      '.story-description', '.article-description',
+      // Generic fallbacks
+      'main article', '.main article', '#main article',
+      'article', '.content p'
+    ];
+
+    for (const sel of universalSelectors) {
+      try {
+        const el = $(sel).first();
+        if (el.length) {
+          const text = el.text().replace(/\s+/g, ' ').trim();
+          if (text.length > 300) return text.slice(0, 4000);
+        }
+      } catch { continue; }
+    }
+
+    // Step 3 — universal paragraph harvest (works on almost any site)
+    // Collect all <p> tags with substantial text, score them by location
+    const paragraphs = [];
+    $('p').each((_, el) => {
+      const text = $(el).text().replace(/\s+/g, ' ').trim();
+      // Only keep paragraphs that look like article content
+      if (text.length > 60 &&
+          !text.toLowerCase().includes('cookie') &&
+          !text.toLowerCase().includes('subscribe') &&
+          !text.toLowerCase().includes('sign up') &&
+          !text.toLowerCase().includes('advertisement') &&
+          !text.toLowerCase().includes('follow us')) {
+        paragraphs.push(text);
+      }
     });
-    if (paras.length) return paras.join(' ').slice(0, 3000);
+
+    if (paragraphs.length >= 3) {
+      return paragraphs.slice(0, 20).join(' ').slice(0, 4000);
+    }
 
     return null;
   } catch {
